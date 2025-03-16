@@ -41,7 +41,7 @@ This API allows you to sign certificate signing requests (CSRs) and retrieve the
 
 Example request:
 ```bash
-curl -X POST https://<your-server-ip>:5000/sign-certificate -H "X-API-KEY: <your-api-key>" -F "csr=@csr_file.pem"
+curl -k -X POST https://192.168.8.97:5000/sign-certificate -H "X-API-KEY:<api-key-here>" -F "csr=@your-cert.req" -o your-cert.crt
 ```
 
 ### 2. Get CA Certificate (`GET /get-ca-cert`)
@@ -53,7 +53,7 @@ curl -X POST https://<your-server-ip>:5000/sign-certificate -H "X-API-KEY: <your
 
 Example request:
 ```bash
-curl -X GET https://<your-server-ip>:5000/get-ca-cert -H "X-API-KEY: <your-api-key>"
+curl -k -X GET https://192.168.8.97:5000/get-ca-cert -H "X-API-KEY:<api-key-here>" -o ca.crt
 ```
 
 ## Rate Limiting
