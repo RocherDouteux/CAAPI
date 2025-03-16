@@ -7,7 +7,7 @@ This API allows you to sign certificate signing requests (CSRs) and retrieve the
 
 - **Sign CSR**: Handle certificate signing requests securely by signing the submitted CSR with the CA's private key.
 - **Get CA Certificate**: Retrieve the CA certificate for use by clients.
-- **API Key Authentication**: Secure API access using an API key with HMAC-based validation.
+- **API Key Authentication**: Secure API access using an API key.
 - **Rate Limiting**: Implemented using Flask-Limiter to prevent abuse of the API.
 
 ## Deployment Instructions
