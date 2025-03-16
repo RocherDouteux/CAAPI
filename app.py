@@ -1,12 +1,10 @@
-import hashlib
-import hmac
 import logging
 import os
 import time
 
 from OpenSSL import crypto
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, Response, jsonify, abort
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -37,12 +35,11 @@ limiter = Limiter(get_remote_address, app=app, default_limits=["5 per minute"])
 
 
 def verify_api_key(client_key):
-    """ Secure API key verification using HMAC for authentication """
+    """ Secure API key verification """
     if not client_key:
         return False
     try:
-        stored_hash = hmac.new(API_SECRET_KEY.encode(), b"", hashlib.sha256).hexdigest()
-        return hmac.compare_digest(client_key, stored_hash)
+        return client_key == API_SECRET_KEY
     except Exception as e:
         logging.error(f"API key verification error: {str(e)}")
         return False
@@ -87,7 +84,11 @@ def sign_certificate():
         signed_cert_pem = crypto.dump_certificate(crypto.FILETYPE_PEM, signed_cert).decode("utf-8")
         logging.info("CSR signed successfully.")
 
-        return jsonify({"certificate": signed_cert_pem}), 200
+        response = Response(signed_cert_pem)
+        response.headers["Content-Type"] = "application/x-pem-file"
+        response.headers["Content-Disposition"] = "attachment; filename=signed_certificate.pem"
+
+        return response
 
     except Exception as e:
         logging.error(f"Error signing certificate: {str(e)}")
@@ -105,7 +106,12 @@ def get_ca_certificate():
 
         with open(CA_CERT_PATH, "r") as ca_cert_file:
             ca_cert = ca_cert_file.read()
-        return jsonify({"ca_certificate": ca_cert}), 200
+
+        response = Response(ca_cert)
+        response.headers["Content-Type"] = "application/x-pem-file"
+        response.headers["Content-Disposition"] = "attachment; filename=ca_certificate.pem"
+
+        return response
 
     except Exception as e:
         logging.error(f"Error retrieving CA certificate: {str(e)}")

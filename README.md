@@ -12,11 +12,6 @@ This API allows you to sign certificate signing requests (CSRs) and retrieve the
 
 ## Deployment Instructions
 
-### Requirements
-
-- Python 3.7+
-- `pip install -r requirements.txt`
-
 ### Steps to Deploy
 
 1. Clone the repository.
@@ -27,16 +22,12 @@ This API allows you to sign certificate signing requests (CSRs) and retrieve the
    SERVER_CERT_PATH=/path/to/server.crt
    SERVER_KEY_PATH=/path/to/server.key
    API_SECRET_KEY=your_api_secret_key
-   ```
-3. Install dependencies:
+
+3. Start the server:
    ```bash
-   pip install -r requirements.txt
+   gunicorn --certfile=certificates/ca-api.crt --keyfile=certificates/ca-api.key -w 1 -b 0.0.0.0:5000 app:app
    ```
-4. Start the server:
-   ```bash
-   python app.py
-   ```
-5. The API will be available at `https://<your-server-ip>:5000/`.
+4. The API will be available at `https://<your-server-ip>:5000/`.
 
 ## API Endpoints
 
